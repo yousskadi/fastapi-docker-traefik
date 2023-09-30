@@ -1,38 +1,32 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  annotations:
-    kompose.cmd: kompose convert -f docker-compose.yml
-    kompose.version: 1.30.0 (9d8dcb518)
-  creationTimestamp: null
   labels:
-    io.kompose.service: db
+    app: db
   name: db
-  namespace: default
+  namespace: dev
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: db
+      app: db
   serviceName: db
   template:
     metadata:
-      annotations:
-        kompose.cmd: kompose convert -f docker-compose.yml
-        kompose.version: 1.30.0 (9d8dcb518)
-      creationTimestamp: null
       labels:
-        io.kompose.network/fastapi-docker-traefik-default: "true"
-        io.kompose.service: db
+        app: db
     spec:
       containers:
         - env:
             - name: POSTGRES_DB
               value: fastapi_traefik
-            - name: POSTGRES_PASSWORD
-              value: fastapi_traefik
             - name: POSTGRES_USER
               value: fastapi_traefik
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: Postgresql-Fastapi-userpass
+                  key: password
           image: postgres:15-alpine
           name: db
           ports:
