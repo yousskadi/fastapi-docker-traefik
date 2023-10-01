@@ -25,7 +25,7 @@ spec:
           env:
             - name: DATABASE_URL
               value: postgresql://fastapi_traefik:fastapi_traefik@db:5432/fastapi_traefik
-          image: $DOCKER_ID/$DOCKER_IMAGE:$DOCKER_TAG
+          image: ykadi/datascientestapi:v.17.0
           name: web
           ports:
             - containerPort: 8000
