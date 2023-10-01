@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+   - db-service.yaml
+   - db-statefulset.yaml
+   - postgres-data-persistentvolumeclaim.yaml
+   - secret-fastapi.yaml
+   - web-claim0-persistentvolumeclaim.yaml
+   - web-deployment.yaml
+   - web-service.yaml
+
+commonLabels: 
+   owner: devops

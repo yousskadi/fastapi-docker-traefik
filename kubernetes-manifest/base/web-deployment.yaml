@@ -3,8 +3,8 @@ kind: Deployment
 metadata:
   labels:
     app: web
-  name: web
-  namespace: default
+  name: web-deploy
+  namespace: dev
 spec:
   replicas: 1
   selector:
@@ -41,3 +41,7 @@ spec:
           persistentVolumeClaim:
             claimName: web-claim0
 status: {}
+
+
+---
+

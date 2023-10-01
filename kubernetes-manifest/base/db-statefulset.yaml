@@ -25,7 +25,7 @@ spec:
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: Postgresql-Fastapi-userpass
+                  name: postgresql-fastapi-userpass
                   key: password
           image: postgres:15-alpine
           name: db
