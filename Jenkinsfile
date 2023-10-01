@@ -63,6 +63,8 @@ stage('Deploiement en dev'){
             steps {
                 script {
                 sh '''
+                docker login -u $DOCKER_ID -p $DOCKER_PASS
+                docker pull $DOCKER_ID/$DOCKER_IMAGE:$DOCKER_TAG
                 cd kubernetes-manifest
                 kubectl apply -k environments/dev
                 '''
@@ -91,6 +93,11 @@ stage('Deploiement en dev'){
                 }
             }
 
+        }
+
+    stage('Prune Docker data') {
+        steps {
+            sh 'docker system prune -a --volumes -f'
         }
 
 }
