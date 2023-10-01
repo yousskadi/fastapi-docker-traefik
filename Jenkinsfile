@@ -55,61 +55,60 @@ stages {
 
         }
 
-stage('Deploiement en dev'){
-        environment
-        {
-        KUBECONFIG = credentials("config") // we retrieve  kubeconfig from secret file called config saved on jenkins
-        }
-            steps {
-                script {
-                sh '''
-                docker login -u $DOCKER_ID -p $DOCKER_PASS
-                docker pull $DOCKER_ID/$DOCKER_IMAGE:$DOCKER_TAG
-                cd kubernetes-manifest
-                kubectl apply -k environments/dev
-                '''
+        stage('Deploiement en dev'){
+                environment
+                {
+                KUBECONFIG = credentials("config") // we retrieve  kubeconfig from secret file called config saved on jenkins
+                DOCKER_PASS = credentials("DOCKER_HUB_PASS")
                 }
-            }
-
-        }
-
-  stage('Deploiement en prod'){
-        environment
-        {
-        KUBECONFIG = credentials("config") // we retrieve  kubeconfig from secret file called config saved on jenkins
-        }
-            steps {
-            // Create an Approval Button with a timeout of 15minutes.
-            // this require a manuel validation in order to deploy on production environment
-                    timeout(time: 15, unit: "MINUTES") {
-                        input message: 'Do you want to deploy in production ?', ok: 'Yes'
+                    steps {
+                        script {
+                        sh '''
+                        cd kubernetes-manifest
+                        kubectl apply -k environments/dev
+                        '''
+                        }
                     }
 
-                script {
-                sh '''
-                cd kubernetes-manifest
-                kubectl apply -k environments/prod
-                '''
                 }
+
+        stage('Deploiement en prod'){
+                environment
+                {
+                KUBECONFIG = credentials("config") // we retrieve  kubeconfig from secret file called config saved on jenkins
+                }
+                    steps {
+                    // Create an Approval Button with a timeout of 15minutes.
+                    // this require a manuel validation in order to deploy on production environment
+                            timeout(time: 15, unit: "MINUTES") {
+                                input message: 'Do you want to deploy in production ?', ok: 'Yes'
+                            }
+
+                        script {
+                        sh '''
+                        cd kubernetes-manifest
+                        kubectl apply -k environments/prod
+                        '''
+                        }
+                    }
+
+                }
+
+            stage('Prune Docker data') {
+                steps {
+                    sh 'docker system prune -a --volumes -f'
+                }
+
+        }
+        post { // send email when the job has failed
+            // ..
+            failure {
+                echo "This will run if the job failed"
+                mail to: "youssef.kadi@gmail.com",
+                    subject: "${env.JOB_NAME} - Build # ${env.BUILD_ID} has failed",
+                    body: "For more info on the pipeline failure, check out the console output at ${env.BUILD_URL}"
             }
-
+            // ..
         }
-
-    stage('Prune Docker data') {
-        steps {
-            sh 'docker system prune -a --volumes -f'
         }
-
-}
-post { // send email when the job has failed
-    // ..
-    failure {
-        echo "This will run if the job failed"
-        mail to: "youssef.kadi@gmail.com",
-             subject: "${env.JOB_NAME} - Build # ${env.BUILD_ID} has failed",
-             body: "For more info on the pipeline failure, check out the console output at ${env.BUILD_URL}"
-    }
-    // ..
-}
-}
 }
