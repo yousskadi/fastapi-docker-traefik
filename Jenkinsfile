@@ -31,7 +31,7 @@ stages {
             steps {
                     script {
                     sh '''
-                    curl localhost
+                    curl http://fastapi.localhost:8081/
                     '''
                     }
             }
