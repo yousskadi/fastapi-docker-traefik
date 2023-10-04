@@ -104,13 +104,22 @@ stages {
         }
     }
         post { // send email when the job has failed
+            always {
+                script {
+                    slackNotifier currentBuild.result
+                }
+            }
+            
+            
             // ..
+            /*
             failure {
                 echo "This will run if the job failed"
                 mail to: "youssef.kadi@gmail.com",
                     subject: "${env.JOB_NAME} - Build # ${env.BUILD_ID} has failed",
                     body: "For more info on the pipeline failure, check out the console output at ${env.BUILD_URL}"
             }
+            */
             // ..
         }
     }
