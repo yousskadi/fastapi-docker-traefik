@@ -10,6 +10,7 @@ resources:
    - web-deployment.yaml
    - web-service.yaml
    - web-svc-nodeport.yaml
+   - ingress.yaml
 
 commonLabels: 
    owner: devops
