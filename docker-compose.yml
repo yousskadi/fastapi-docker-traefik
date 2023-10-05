@@ -24,6 +24,17 @@ services:
       - POSTGRES_USER=fastapi_traefik
       - POSTGRES_PASSWORD=fastapi_traefik
       - POSTGRES_DB=fastapi_traefik
+<<<<<<< HEAD
+=======
+  traefik:
+    image: traefik:v2.9.6
+    ports:
+      - 8008:80
+      - 8081:8080
+    volumes:
+      - "./traefik.dev.toml:/etc/traefik/traefik.toml"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+>>>>>>> 4062f9a7ed03e1b9d3d92c591b4920ff0da27c2d
 
 volumes:
   postgres_data:

@@ -20,6 +20,8 @@ stages {
                 steps {
                     script {
                     sh '''
+                    echo "Cleaning existing container if exist"
+                    docker ps -a | grep -i fastapi && docker rm -f fastapi
                     docker run -d -p 80:80 --name fastapi $DOCKER_ID/$DOCKER_IMAGE:$DOCKER_TAG
                     sleep 10
                     '''
@@ -31,7 +33,11 @@ stages {
             steps {
                     script {
                     sh '''
+<<<<<<< HEAD
                     curl http://fastapi.localhost:80/
+=======
+                    curl -X GET -i http://0.0.0.0:80
+>>>>>>> 4062f9a7ed03e1b9d3d92c591b4920ff0da27c2d
                     '''
                     }
             }
@@ -58,7 +64,7 @@ stages {
         stage('Deploiement en dev'){
                 environment
                 {
-                KUBECONFIG = credentials("config") // we retrieve  kubeconfig from secret file called config saved on jenkins
+                KUBECONFIG = credentials("aks") // we retrieve  kubeconfig from secret file called config saved on jenkins
                 DOCKER_PASS = credentials("DOCKER_HUB_PASS")
                 }
                     steps {
@@ -102,13 +108,22 @@ stages {
         }
     }
         post { // send email when the job has failed
+            always {
+                script {
+                    slackNotifier currentBuild.result
+                }
+            }
+            
+            
             // ..
+            /*
             failure {
                 echo "This will run if the job failed"
                 mail to: "youssef.kadi@gmail.com",
                     subject: "${env.JOB_NAME} - Build # ${env.BUILD_ID} has failed",
                     body: "For more info on the pipeline failure, check out the console output at ${env.BUILD_URL}"
             }
+            */
             // ..
         }
     }

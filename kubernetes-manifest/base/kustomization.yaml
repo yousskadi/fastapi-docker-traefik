@@ -9,6 +9,8 @@ resources:
    - web-claim0-persistentvolumeclaim.yaml
    - web-deployment.yaml
    - web-service.yaml
+   - web-svc-nodeport.yaml
+   - ingress.yaml
 
 commonLabels: 
    owner: devops

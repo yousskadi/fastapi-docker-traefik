@@ -10,11 +10,9 @@ app = FastAPI(title="FastAPI, Docker, and Traefik")
 async def read_root():
     return await User.objects.all()
 
-@api.get('/other')
-def get_other():
-    return {
-        'method': 'get',
-        'endpoint': '/other
+@app.get("/posts")
+async def root():
+    return {"message": "My first post"}
 
 @app.on_event("startup")
 async def startup():
