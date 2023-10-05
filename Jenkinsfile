@@ -60,7 +60,7 @@ stages {
         stage('Deploiement en dev'){
                 environment
                 {
-                KUBECONFIG = credentials("config") // we retrieve  kubeconfig from secret file called config saved on jenkins
+                KUBECONFIG = credentials("aks") // we retrieve  kubeconfig from secret file called config saved on jenkins
                 DOCKER_PASS = credentials("DOCKER_HUB_PASS")
                 }
                     steps {
